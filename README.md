@@ -8,10 +8,12 @@ Demo
 
 View the demo online at http://bahamas10.github.com/bpm-web/
 
+or check out the android application! https://play.google.com/store/apps/details?id=com.daveeddy.bpmmeter
+
 Modules Used
 ------------
 
-* [javascript bpm][0]: calculate BPM for node/the web using javascript
+* [bpm][0]: calculate BPM for node/the web using javascript
 * [thumbs.js][1]: add touch support to your browser
 * [visualtap.js][2]: add a visual aspect to touch events on any dom element
 

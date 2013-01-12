@@ -1,0 +1,121 @@
+<!doctype html>
+<html>
+	<head>
+		<title>BPM Calculator</title>
+		<script src="js/thumbs.0.5.2.min.js"></script>
+		<script src="js/visualtap.min.js"></script>
+		<script src="js/bpm.js"></script>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+		<style>
+			html, body {
+				margin: 0;
+				padding: 0;
+				border: none;
+				box-sizing: border-box;
+				width: 100%;
+				height: 100%;
+				background-color: #111;
+				color: #ededed;
+				font-family: monospace, sans-serif;
+				text-align: center;
+				font-size: 12pt;
+			}
+			#bpm {
+				padding: 20px;
+			}
+			#avgbpm {
+				font-size: 50pt;
+			}
+			#resetdiv {
+				position: absolute;
+				top: 10px;
+				left: 10px;
+				width: 80px;
+				height: 20px;
+				border: 1px solid white;
+			}
+			#resetdiv:hover {
+				cursor: pointer;
+			}
+			#author {
+				position: absolute;
+				bottom: 10px;
+				width: 100%;
+				font-size: 11pt;
+			}
+			a {
+				color: white;
+			}
+		</style>
+		<script>
+			// dom elements
+			var avgbpm, count, delta, touch;
+			var bpm = new BPM();
+
+
+			// helper function to stop event propagation
+			function prevent(e) {
+				if (e && e.stopPropagation) e.stopPropagation();
+				if (e && e.preventDefault) e.preventDefault();
+			}
+
+			// reset the bpm counter
+			function reset() {
+				avgbpm.innerHTML = 'tap anywhere';
+				count.innerHTML = '';
+				delta.innerHTML = '';
+				resetdiv.hidden = true;
+				bpm.reset();
+			}
+
+
+			// called when the window loads
+			function init() {
+				avgbpm = document.getElementById('avgbpm');
+				count = document.getElementById('count');
+				delta = document.getElementById('delta');
+				resetdiv = document.getElementById('resetdiv');
+
+				// hook up the touch events
+				document.body.addEventListener('touchstart', tick);
+				document.body.addEventListener('keydown', tick);
+				function tick(e) {
+					var info = bpm.tap();
+					var avg = Math.round(info.avg * 100) / 100;
+					avgbpm.innerHTML = avg || '---';
+					count.innerHTML = info.count + ' taps';
+					resetdiv.hidden = false;
+					//delta.innerHTML = 'ms elapsed from last tap: ' + i;
+				}
+
+				// prevent highlighting text
+				document.body.addEventListener('mousedown', prevent);
+
+				// hook up reset button
+				resetdiv.addEventListener('touchstart', prevent);
+				resetdiv.addEventListener('touchend', function(e) {
+					prevent(e);
+					reset();
+				});
+
+				// reset the counter and show the page
+				reset();
+				visualtap(document.body);
+				window.scrollTo(1);
+			}
+			window.addEventListener('load', init);
+		</script>
+	</head>
+	<body>
+		<div id="bpm">
+			<span id="avgbpm"></span><br />
+			<span id="count"></span><br />
+			<span id="delta"></span>
+		</div>
+		<div id="resetdiv">
+			reset
+		</div>
+		<span id="author">written by <a href="http://www.daveeddy.com">dave eddy</a>
+			(github <a href="https://github.com/bahamas10">bahamas10</a>)</span>
+	</body>
+</html>
